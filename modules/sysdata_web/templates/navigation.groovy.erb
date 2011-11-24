@@ -1,0 +1,15 @@
+canoeux = [
+  logoutUrl:    "<%= scope.lookupvar('sysdata_web::application::logout_url') %>",
+  myAccountUrl: "<%= scope.lookupvar('sysdata_web::application::my_account_url') %>",
+  applications: [
+    [
+      name:'System Data',
+      roles:'ROLE_sysdata_admin,ROLE_sysdata_company_admin,ROLE_sysdata_app_admin',
+      url:'<%= scope.lookupvar('sysdata_web::application::sysdata_url') %>'],
+    [
+       name:'Web Portal',
+       roles:'ROLE_canoe_ad_ops,ROLE_canoe_admin,ROLE_canoe_marketing,ROLE_canoe_sales,ROLE_network_sales',
+       url:'<%= scope.lookupvar('sysdata_web::application::webportal_url') %>'
+    ]
+  ]
+]
