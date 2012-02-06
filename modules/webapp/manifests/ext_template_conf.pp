@@ -1,23 +1,25 @@
 define webapp::ext_template_conf (
   $conf_dir,
-  $service_name = '',
-  $template_file = $name) {
+  $owner,
+  $group = 'root',
+  $mode = '600',
+  $service_name = 'UNSET',
+  $template_file = $name
+) {
 
-#  require stdlib
   validate_re($name, ['.erb$'])
 
   $filename = regsubst($name, '.*?([^\/]*)\.erb$', '\1')
 
-  if $service_name == '' {
-    file {"${conf_dir}/${filename}":
-      content => template($name),
-    }
+  file {"${conf_dir}/${filename}":
+    content => template($name),
+    owner   => $owner,
+    group   => $group,
+    mode    => $mode,
   }
-  else {
-    file {"${conf_dir}/${filename}":
-      content => template($name),
-      notify  => Service[$service_name],
-    }
+
+  if $service_name != 'UNSET' {
+    File["${conf_dir}/${filename}"] -> Service[$service_name]
   }
 
 }

@@ -19,22 +19,26 @@
 # === Actions
 #
 # * Makes sure the Sun/Oracle JDK is installed. (see Class[sun_jdk])
-# * Creates the 'tc-server' user and group.
-# * Installs the tc Server RPM from Yum and makes sure it's owned by 'tc-server'
+# * Creates the user and group to run as
+# * Installs the tc Server RPM from Yum and makes sure ownership is set
 #
 class tcserver::install(
-  $package_name = '',
-  $version = ''
+  $owner,
+  $group,
+  $package_name = 'UNSET',
+  $version = 'UNSET'
 ) {
 
+  Class['tcserver::params'] -> Class['tcserver::install']
+
   if !defined(Class['tcserver::params']) {
-    include 'tcserver::params'
+    class {'tcserver::params': }
   }
 
   $the_package_name = $package_name ? {
-    '' => $tcserver::params::package_name, default => $package_name}
+    'UNSET' => $tcserver::params::package_name, default => $package_name}
   $the_version = $version ? {
-    '' => $tcserver::params::version, default => $version}
+    'UNSET' => $tcserver::params::version, default => $version}
 
   $tcserver_home = "/opt/${the_package_name}-${the_version}"
 
@@ -44,43 +48,50 @@ class tcserver::install(
     }
   }
 
-  package { 'tc-server':
-    name    => $the_package_name,
-    ensure  => "${the_version}-1",
-    require => [Class['sun_jdk'], User['tc-server']],
+  anchor {'tcserver::install::begin':
+    before => Group[$group],
   }
 
-  group { 'tc-server':
+  package { 'tc-server':
+    ensure  => "${the_version}-1",
+    name    => $the_package_name,
+    require => [Class['sun_jdk'], User[$owner]],
+  }
+
+  group { $group:
     ensure => present,
   }
 
-  user { 'tc-server':
+  user { $owner:
     ensure           => present,
     comment          => 'SpringSource tc-Server',
-    gid              => 'tc-server',
+    gid              => $group,
     home             => $tcserver_home,
     password         => '!!',
     password_max_age => '-1',
     password_min_age => '-1',
     shell            => '',
-    require          => Group['tc-server'],
-  }
-  
-  exec { "set_tcserver_dir_ownership":
-    command => "chown -R tc-server.tc-server ${tcserver_home}",
-    path    => "/usr/bin:/bin",
-    unless  => "test `stat -c %U ${tcserver_home}` = tc-server",
-    require => [Package['tc-server'], User['tc-server']],
-    before  => Class['tcserver::instance'],
+    require          => Group[$group],
   }
 
-  file { "set_tcserver_dir_ownership":
-    path => $tcserver_home,
-    owner => 'tc-server',
-    group => 'tc-server',
+  exec { 'set_tcserver_dir_ownership':
+    command => "chown -R ${owner}.${$group} ${tcserver_home}",
+    path    => '/usr/bin:/bin',
+    unless  => "test `stat -c %U ${tcserver_home}` = ${owner}",
+    require => [Package['tc-server'], User[$owner]],
+  }
+
+  file { 'set_tcserver_dir_ownership':
+    path    => $tcserver_home,
+    owner   => $owner,
+    group   => $group,
     recurse => false,
-    mode => '2600',
+    mode    => '2600',
     require => Package['tc-server'],
+  }
+
+  anchor {'tcserver::install::end':
+    require => Exec['set_tcserver_dir_ownership'],
   }
 
 }

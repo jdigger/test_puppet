@@ -2,6 +2,11 @@ class sysdata_web (
   $version,
   $artifactory_username,
   $artifactory_password,
+  $conf_dir,
+  $owner,
+  $group,
+
+  # template values
   $crowd_username,
   $crowd_password,
   $crowd_server_url,
@@ -14,44 +19,40 @@ class sysdata_web (
   $datasource_password,
   $grails_server_url,
   $webservice_base_url,
-  $conf_dir,
+
   $release = true
 ) {
 
-  if !defined(Class['tcserver::install']) {
-    if !defined(Class['tcserver::params']) {
-      include 'tcserver::params'
-    }
-
-    class { 'tcserver::install':
-      package_name => $tcserver::params::package_name,
-      version      => $tcserver::params::version,
+  if !defined(Class['tcserver']) {
+    class { 'tcserver':
+      instance_name => 'sysdata',
+      owner         => $owner,
+      group         => $group,
+      service_name  => 'tcserver-sysdata',
     }
   }
 
-  class { 'sysdata_web::server': }
-
-  class { 'sysdata_web::application':
+  class { 'webapp':
+    app_name             => 'sysdata',
+    group_name           => 'com.canoeventures.sysdata',
     version              => $version,
     release              => $release,
     artifactory_username => $artifactory_username,
     artifactory_password => $artifactory_password,
-    crowd_username       => $crowd_username,
-    crowd_password       => $crowd_password,
-    crowd_server_url     => $crowd_server_url,
-    logout_url           => $logout_url,
-    my_account_url       => $my_account_url,
-    sysdata_url          => $sysdata_url,
-    webportal_url        => $webportal_url,
-    datasource_url       => $datasource_url,
-    datasource_username  => $datasource_username,
-    datasource_password  => $datasource_password,
-    grails_server_url    => $grails_server_url,
-    webservice_base_url  => $webservice_base_url,
+    owner                => $owner,
+    group                => $group,
     conf_dir             => $conf_dir,
-    require              => Class['sysdata_web::server'],
+    server_dir           => $tcserver::instance_dir_real,
+    sysproperty_name     => 'SYSDATACONF',
+    template_files       => [
+      'sysdata_web/crowd-ehcache.xml.erb',
+      'sysdata_web/crowd.properties.erb',
+      'sysdata_web/log4j.groovy.erb',
+      'sysdata_web/navigation.groovy.erb',
+      'sysdata_web/sysdata.properties.erb',
+    ],
+    service_name         => 'tcserver-sysdata',
+    require              => Class['tcserver'],
   }
-
-  Class['sysdata_web::server'] -> Class['sysdata_web::application']
 
 }

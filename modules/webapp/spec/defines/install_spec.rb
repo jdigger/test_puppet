@@ -5,12 +5,13 @@ describe 'webapp::install' do
   let(:title) { 'my_app' }
   let(:params) do
     {
-      group_name: 'test.group.myapp',
-      version:    '1.2.3',
+      group_name:           'test.group.myapp',
+      version:              '1.2.3',
       artifactory_username: 'uname',
       artifactory_password: 'pw',
-      conf_dir:   "/var/conf/#{title}",
-      server_dir: "/opt/vfabric-tc-server-developer-2.6.2.RELEASE/#{title}"
+      owner:                'test-user',
+      group:                'test-group',
+      server_dir:           "/opt/vfabric-tc-server-developer-2.6.2.RELEASE/#{title}",
     }
   end
   let(:facts) {{operatingsystem: 'CentOS'}}

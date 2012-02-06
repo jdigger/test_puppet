@@ -1,7 +1,7 @@
-application.name=<%= scope.lookupvar('sysdata_web::application::crowd_username') %>
-application.password=<%= scope.lookupvar('sysdata_web::application::crowd_password') %>
+application.name=<%= scope.lookupvar('sysdata_web::crowd_username') %>
+application.password=<%= scope.lookupvar('sysdata_web::crowd_password') %>
 
-crowd.server.url=<%= scope.lookupvar('sysdata_web::application::crowd_server_url') %>
+crowd.server.url=<%= scope.lookupvar('sysdata_web::crowd_server_url') %>
 session.isauthenticated=session.isauthenticated
 session.tokenkey=session.tokenkey
 session.validationinterval=1

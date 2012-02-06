@@ -18,8 +18,8 @@
 #  class {'sun_jdk': }
 #
 class sun_jdk(
-  $jdk_package_name = '',
-  $jdk_version = ''
+  $jdk_package_name = 'UNSET',
+  $jdk_version = 'UNSET'
 ) {
 
   if !defined(Class['sun_jdk::params']) {
@@ -27,9 +27,9 @@ class sun_jdk(
   }
 
   $the_package_name = $jdk_package_name ? {
-    '' => $sun_jdk::params::jdk_package_name, default => $jdk_package_name}
+    'UNSET' => $sun_jdk::params::jdk_package_name, default => $jdk_package_name}
   $the_version = $jdk_version ? {
-    '' => $sun_jdk::params::jdk_version, default => $jdk_version}
+    'UNSET' => $sun_jdk::params::jdk_version, default => $jdk_version}
 
   $java_home = "/usr/java/jdk${the_version}"
 

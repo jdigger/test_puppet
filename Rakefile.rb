@@ -2,11 +2,6 @@ require 'rake'
 require 'rspec/core/rake_task'
 require 'puppet-lint/tasks/puppet-lint'
 
-# RSpec::Core::RakeTask.new(:spec) do |t|
-#   t.pattern = 'modules/*/spec/*/*_spec.rb'
-#   t.rspec_opts = '--tty -c -f d'
-# end
-
 task :default => :spec
 
 desc "Run all module spec tests (Requires rspec-puppet gem)"
@@ -20,6 +15,8 @@ task :graph do
   system("/opt/local/bin/dot /var/lib/puppet/state/graphs/relationships.dot -Tpng -o relationships.png ")
   system("/opt/local/bin/dot /var/lib/puppet/state/graphs/resources.dot -Tpng -o resources.png ")
 end
+
+PuppetLint.configuration.send("disable_80chars")
 
 # desc "Build package"
 # task :build do

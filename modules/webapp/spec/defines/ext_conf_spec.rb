@@ -8,12 +8,14 @@ describe 'webapp::ext_conf' do
       sysproperty_name: "MYAPPCONFIG",
       conf_dir:         "/var/conf/#{title}",
       server_dir:       "/opt/vfabric-tc-server-developer-2.6.2.RELEASE/#{title}",
+      owner:            'test-user',
+      group:            'test-group',
     }
   end
 
-  let(:title) { 'my_app' }
+  let(:title)  { 'my_app' }
   let(:params) { @params }
-  let(:facts) { {operatingsystem: 'CentOS'} }
+  let(:facts)  { {operatingsystem: 'CentOS'} }
 
   it "should update the server's setenv.sh" do
     should contain_exec("update_external_conf_#{title}").with(
@@ -26,9 +28,9 @@ describe 'webapp::ext_conf' do
   it do
     should contain_file(params[:conf_dir]).with(
       ensure:   :directory,
-      owner: 'tc-server',
-      group: 'tc-server',
-      require: "Tcserver::Instance[#{title}]",
+      owner:    'test-user', 
+      group:    'test-group',
+      require:  "File[/var/conf]",
     )
   end
 

@@ -1,7 +1,7 @@
 dataSource.driverClassName=oracle.jdbc.OracleDriver
-dataSource.url=<%= scope.lookupvar('sysdata_web::application::datasource_url') %>
-dataSource.username=<%= scope.lookupvar('sysdata_web::application::datasource_username') %>
-dataSource.password=<%= scope.lookupvar('sysdata_web::application::datasource_password') %>
+dataSource.url=<%= scope.lookupvar('sysdata_web::datasource_url') %>
+dataSource.username=<%= scope.lookupvar('sysdata_web::datasource_username') %>
+dataSource.password=<%= scope.lookupvar('sysdata_web::datasource_password') %>
 
 #Set the following for 11g
 dataSource.dialect=org.hibernate.dialect.Oracle10gDialect
@@ -13,6 +13,6 @@ hibernate.cache.provider_class=net.sf.ehcache.hibernate.EhCacheProvider
 # The following line should be commented out or deleted in Production or QA environments
 # grails.plugin.databasemigration.updateOnStart=true
 
-grails.serverURL=<%= scope.lookupvar('sysdata_web::application::grails_server_url') %>
-webservice.baseURL=<%= scope.lookupvar('sysdata_web::application::webservice_base_url') %>
-canoe.webportalURL=<%= scope.lookupvar('sysdata_web::application::webportal_url') %>
+grails.serverURL=<%= scope.lookupvar('sysdata_web::grails_server_url') %>
+webservice.baseURL=<%= scope.lookupvar('sysdata_web::webservice_base_url') %>
+canoe.webportalURL=<%= scope.lookupvar('sysdata_web::webportal_url') %>

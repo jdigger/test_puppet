@@ -1,5 +1,4 @@
 node 'base' {
-  include stdlib
 
   $artifactory_username = 'yumclient'
   $artifactory_password = 'p%4055w0rd'  # must (currently) be pre-urlencoded
@@ -17,18 +16,16 @@ node 'base' {
   }
 
   Yumrepo <| |> -> Package <| provider == yum |>
-
 }
 
 
 node 'tcserver_machine' inherits 'base' {
-  
-  class {'tcserver::params': }
 
-  class { 'tcserver::install':
-    package_name => $tcserver::params::package_name,
-    version      => $tcserver::params::version,
-    require      => Class['tcserver::params'],
+  class { 'tcserver':
+    instance_name => 'sysdata',
+    owner         => 'tc-server',
+    group         => 'tc-server',
+    service_name  => 'tcserver-sysdata',
   }
 
 }
@@ -38,7 +35,7 @@ node 'default' inherits 'tcserver_machine' {
 
   class { 'sysdata_web':
     version              => '1.4.2_7',
-    conf_dir             => "/var/conf/sysdata",
+    conf_dir             => '/var/conf/sysdata',
 
     crowd_username       => 'web_portal',
     crowd_password       => 'admin',
@@ -56,8 +53,11 @@ node 'default' inherits 'tcserver_machine' {
     datasource_url       => 'jdbc:oracle:thin:@10.13.18.67:1522:caasit02',
     datasource_username  => 'sysdata',
     datasource_password  => 'secret',
-    
-    require              => Class['tcserver::install'],
+
+    owner                => $tcserver::owner,
+    group                => $tcserver::group,
+
+    require              => Class['tcserver'],
   }
 
 }

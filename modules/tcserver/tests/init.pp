@@ -2,7 +2,7 @@ Package {
   provider => 'yum',
 }
 
-class { 'tcserver::instance':
+class { 'tcserver':
   instance_name => 'a_server_instance',
   owner         => 'tc-server',
   group         => 'tc-server',
