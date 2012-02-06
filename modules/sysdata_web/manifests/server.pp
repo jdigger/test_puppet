@@ -16,7 +16,6 @@ class sysdata_web::server (
 
     class { 'tcserver::install':
       version => $tcs_version,
-#      stage   => 'setup_infra',
     }
   }
 
@@ -26,14 +25,12 @@ class sysdata_web::server (
     name         => 'sysdata',
     instance_dir => $sysdata_instance_dir,
     require      => Class['tcserver::install'],
-#    stage        => 'main',
   }
 
   class {'tcserver::service':
     instance_name => 'sysdata',
     instance_dir  => $sysdata_instance_dir,
     service_name  => 'tcserver-sysdata',
-#    stage         => 'deploy_app',
     require       => Class['tcserver::instance'],
   }
 

@@ -23,15 +23,12 @@ node 'base' {
 
 node 'tcserver_machine' inherits 'base' {
   
-  class {'tcserver::params':
-#    stage        => 'setup',
-  }
+  class {'tcserver::params': }
 
   class { 'tcserver::install':
     package_name => $tcserver::params::package_name,
     version      => $tcserver::params::version,
     require      => Class['tcserver::params'],
-#    stage        => 'setup',
   }
 
 }
@@ -61,8 +58,6 @@ node 'default' inherits 'tcserver_machine' {
     datasource_password  => 'secret',
     
     require              => Class['tcserver::install'],
-
-#    stage                => 'deploy_app',
   }
 
 }
