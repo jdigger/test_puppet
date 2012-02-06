@@ -1,25 +1,26 @@
 # == Class: tcServer::install
 #
-# Installs the Sun/Oracle JDK.
+# Installs SpringSource tc Server from Yum.
 #
 # === Parameters
 #
-# [*top_java_dirname*]
-#   The top-level directory to contain the Java installation.
-#   (e.g., /usr/java)  Defaults to $sun_jdk::params::top_java_dirname
+# [*package_name*]
+#   The name of the Yum package to install.
+#   Defaults to $tcserver::params::package_name
 #
-# [*jdk_dirname*]
-#   The relative name of the directory under $top_java_dirname that gets
-#   created by the installer. The full path is what gets put into
-#   JAVA_HOME and PATH.  Defaults to $sun_jdk::params::jdk_dirname
-#
-# [*installer_file*]
-#   The name of the installation program.
-#   Defaults to $sun_jdk::params::installer_file
+# [*version*]
+#   The version of tc Server. (Does not include the
+#   package revision.)  Defaults to $tcserver::params::version
 #
 # === Examples
 #
 #  class { 'tcserver::install': }
+#
+# === Actions
+#
+# * Makes sure the Sun/Oracle JDK is installed. (see Class[sun_jdk])
+# * Creates the 'tc-server' user and group.
+# * Installs the tc Server RPM from Yum and makes sure it's owned by 'tc-server'
 #
 class tcserver::install(
   $package_name = '',
