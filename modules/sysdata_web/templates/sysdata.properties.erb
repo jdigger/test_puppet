@@ -1,3 +1,6 @@
+#
+# This file is managed by Puppet, so local changes will be overridden
+#
 dataSource.driverClassName=oracle.jdbc.OracleDriver
 dataSource.url=<%= scope.lookupvar('sysdata_web::datasource_url') %>
 dataSource.username=<%= scope.lookupvar('sysdata_web::datasource_username') %>
