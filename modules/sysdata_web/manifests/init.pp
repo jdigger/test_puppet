@@ -52,7 +52,7 @@ class sysdata_web (
       'sysdata_web/sysdata.properties.erb',
     ],
     service_name         => 'tcserver-sysdata',
-    require              => Class['tcserver'],
+    # require              => Class['tcserver::service'],
   }
 
 }

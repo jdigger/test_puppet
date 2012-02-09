@@ -2,7 +2,7 @@ define webapp::ext_template_conf (
   $conf_dir,
   $owner,
   $group = 'root',
-  $mode = '600',
+  $mode = '0600',
   $service_name = 'UNSET',
   $template_file = $name
 ) {
@@ -19,7 +19,7 @@ define webapp::ext_template_conf (
   }
 
   if $service_name != 'UNSET' {
-    File["${conf_dir}/${filename}"] -> Service[$service_name]
+    File["${conf_dir}/${filename}"] ~> Service[$service_name]
   }
 
 }
