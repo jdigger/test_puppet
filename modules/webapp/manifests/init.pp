@@ -36,6 +36,7 @@ class webapp (
       template_file    => $template_file,
       template_files   => $template_files,
       service_name     => $service_name,
+      require          => File[$server_dir],
     }
   }
 

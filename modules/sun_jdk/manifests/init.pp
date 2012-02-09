@@ -40,12 +40,12 @@ class sun_jdk(
   $jdk_version_real = $jdk_version ? {
     'UNSET' => $sun_jdk::params::jdk_version, default      => $jdk_version}
   $jdk_package_version_real = $jdk_package_version ? {
-    'UNSET' => "${jdk_package_version_real}-rcs", default  => $jdk_package_version}
+    'UNSET' => "${jdk_version_real}-fcs", default  => $jdk_package_version}
 
   $java_home = "/usr/java/jdk${jdk_version_real}"
 
   package { $package_name_real:
-    ensure => "${jdk_package_version_real}-fcs",
+    ensure => $jdk_package_version_real,
   }
 
   # Install the "unlimited" Java Cryptography policy files

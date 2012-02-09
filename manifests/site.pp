@@ -19,7 +19,7 @@ node 'base' {
 }
 
 
-node 'tcserver_machine' inherits 'base' {
+node 'default' inherits 'base' {
 
   class { 'tcserver':
     instance_name => 'sysdata',
@@ -27,12 +27,7 @@ node 'tcserver_machine' inherits 'base' {
     group         => 'tc-server',
     service_name  => 'tcserver-sysdata',
   }
-
-}
-
-
-node 'default' inherits 'tcserver_machine' {
-
+  ->
   class { 'sysdata_web':
     version              => '1.4.2_7',
     conf_dir             => '/var/conf/sysdata',
@@ -56,8 +51,6 @@ node 'default' inherits 'tcserver_machine' {
 
     owner                => $tcserver::owner,
     group                => $tcserver::group,
-
-    require              => Class['tcserver'],
   }
 
 }

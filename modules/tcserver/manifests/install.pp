@@ -43,14 +43,12 @@ class tcserver::install(
   $tcserver_home = "/opt/${the_package_name}-${the_version}"
 
   if !defined(Class['sun_jdk']) {
-    class { 'sun_jdk':
-      jdk_version => $tcserver::params::jdk_version,
-    }
+    class { 'sun_jdk': }
   }
 
-  anchor {'tcserver::install::begin':
-    before => Group[$group],
-  }
+  # anchor {'tcserver::install::begin':
+  #   before => Group[$group],
+  # }
 
   package { 'tc-server':
     ensure  => "${the_version}-1",
@@ -90,8 +88,8 @@ class tcserver::install(
     require => Package['tc-server'],
   }
 
-  anchor {'tcserver::install::end':
-    require => Exec['set_tcserver_dir_ownership'],
-  }
+  # anchor {'tcserver::install::end':
+  #   require => Exec['set_tcserver_dir_ownership'],
+  # }
 
 }
