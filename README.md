@@ -18,7 +18,7 @@ To bootstrap a CentOS 5.5 x86_64 box, run the following script:
     $ rpm -Uvh http://yum.puppetlabs.com/el/5/products/x86_64/puppetlabs-release-5-1.noarch.rpm
     $ yum install -y puppet-2.7.10 git
     $ rm -rf /etc/puppet
-    $ git clone https://github.com/jdigger/test_puppet.git /etc/puppet
+    $ git clone git://github.com/jdigger/test_puppet.git /etc/puppet
     $ cd /etc/puppet
     $ git submodule init
     $ git submodule update
