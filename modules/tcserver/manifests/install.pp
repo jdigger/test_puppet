@@ -12,6 +12,12 @@
 #   The version of tc Server. (Does not include the
 #   package revision.)  Defaults to $tcserver::params::version
 #
+# [*owner*]
+#   The system owner to run tc Server as. Defaults to $tcserver::params::owner.
+#
+# [*group*]
+#   The system group to run tc Server as. Defaults to $tcserver::params::group.
+#
 # === Examples
 #
 #  class { 'tcserver::install': }

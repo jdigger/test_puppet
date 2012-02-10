@@ -1,9 +1,60 @@
+# == Class: sysdata_web
+#
+# The SysData web application
+#
+# === Parameters
+#
+# [*version*]
+#   The version of the application.
+#
+# [*conf_dir*]
+#   The directory on the machine to install the external configuration into.
+#
+# [*server_dir*]
+#   The directory where the instance of tc-Server is installed.
+#
+# [*artifactory_username*]
+#   Username to use when getting the WAR from Artifactory.
+#
+# [*artifactory_password*]
+#   Password to use when getting the WAR from Artifactory.
+#
+# [*release*]
+#   Is this a release version (as opposed to a SNAPSHOT)?
+#   Defaults to 'true'.
+#
+# === Examples
+#
+# class { 'sysdata_web':
+#   version              => '1.4.2_7',
+#   release              => true,
+#   conf_dir             => '/var/conf/sysdata',
+#   server_dir           => $tcserver::instance_dir_real,
+# 
+#   crowd_username       => #####,
+#   crowd_password       => #####,
+#   crowd_server_url     => 'http://crowd_server:9095/crowd/',
+# 
+#   artifactory_username => #####,
+#   artifactory_password => #####,  # must (currently) be pre-urlencoded
+#   logout_url           => 'https://server_name/portal/logout/index',
+#   my_account_url       => 'https://server_name/portal/account/profile',
+#   sysdata_url          => 'https://server_name/sysdata',
+#   webportal_url        => 'https://server_name/portal/',
+#   grails_server_url    => 'http://server_name/sysdata',
+#   webservice_base_url  => 'http://server_name/sysdata',
+# 
+#   datasource_url       => 'jdbc:oracle:thin:@oracle_server:1522:sid',
+#   datasource_username  => #####,
+#   datasource_password  => #####,
+# }
+#
 class sysdata_web (
   $version,
-  $artifactory_username,
-  $artifactory_password,
   $conf_dir,
   $server_dir,
+  $artifactory_username,
+  $artifactory_password,
 
   # template values
   $crowd_username,
@@ -19,19 +70,8 @@ class sysdata_web (
   $grails_server_url,
   $webservice_base_url,
 
-  $owner = 'UNSET',
-  $group = 'UNSET',
   $release = true
 ) {
-
-  $owner_real = $owner ? {
-    'UNSET' => $tcserver::params::owner,
-    default => $owner,
-  }
-  $group_real = $group ? {
-    'UNSET' => $tcserver::params::group,
-    default => $group,
-  }
 
   $instance_name = 'sysdata'
   $service_name  = 'tcserver-sysdata'
@@ -39,11 +79,12 @@ class sysdata_web (
   if !defined(Class['tcserver']) {
     class { 'tcserver':
       instance_name => $instance_name,
-      owner         => $owner_real,
-      group         => $group_real,
       service_name  => $service_name,
     }
   }
+
+  $owner_real = $tcserver::owner_real
+  $group_real = $tcserver::group_real
 
   webapp{ 'sysdata':
     group_name           => 'com.canoeventures.sysdata',
@@ -73,7 +114,7 @@ class sysdata_web (
     service_name  => $service_name,
     owner         => $owner_real,
     group         => $group_real,
-    instance_dir  => "/opt/vfabric-tc-server-developer-2.6.2.RELEASE/sysdata",
+    instance_dir  => $server_dir,
   }
 
 }

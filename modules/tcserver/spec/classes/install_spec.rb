@@ -13,11 +13,7 @@ describe 'tcserver::install' do
 
   let(:facts) { {operatingsystem: 'CentOS'} }
 
-  it "should make sure Java is installed" do
-    should contain_class('sun_jdk').with(
-      jdk_version: '1.6.0_30',
-    )
-  end
+  it { should contain_class('sun_jdk') }
 
   it "should install the package" do
     should contain_package('tc-server').with(

@@ -6,13 +6,14 @@
 # tcserver::instance{'a_server_instance': }
 #
 define tcserver::instance (
-  $instance_name  = $name,
   $owner          = 'UNSET',
   $group          = 'UNSET',
-  $service_name   = "tcserver-${instance_name}",
+  $service_name   = "tcserver-${name}",
   $tomcat_version = 'UNSET',
   $instance_dir   = 'UNSET'
 ) {
+
+  $instance_name  = $name
 
   require 'tcserver::params'
 

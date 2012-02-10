@@ -21,8 +21,8 @@
 #  class {'sun_jdk': }
 #
 class sun_jdk(
-  $jdk_version = 'UNSET',
-  $jdk_package_name = 'UNSET',
+  $jdk_version         = 'UNSET',
+  $jdk_package_name    = 'UNSET',
   $jdk_package_version = 'UNSET'
 ) {
 
@@ -34,11 +34,17 @@ class sun_jdk(
   $p2     = "puppet://modules/${module}"
 
   $package_name_real = $jdk_package_name ? {
-    'UNSET' => $sun_jdk::params::jdk_package_name, default => $jdk_package_name}
+    'UNSET' => $sun_jdk::params::jdk_package_name,
+    default => $jdk_package_name
+  }
   $jdk_version_real = $jdk_version ? {
-    'UNSET' => $sun_jdk::params::jdk_version, default      => $jdk_version}
+    'UNSET' => $sun_jdk::params::jdk_version,
+    default => $jdk_version
+  }
   $jdk_package_version_real = $jdk_package_version ? {
-    'UNSET' => "${jdk_version_real}-fcs", default  => $jdk_package_version}
+    'UNSET' => "${jdk_version_real}-fcs",
+    default => $jdk_package_version
+  }
 
   $java_home = "/usr/java/jdk${jdk_version_real}"
 

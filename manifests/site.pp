@@ -34,6 +34,7 @@ node 'default' inherits 'base' {
   ->
   class { 'sysdata_web':
     version              => '1.4.2_7',
+    release              => true,
     conf_dir             => '/var/conf/sysdata',
     server_dir           => $tcserver::instance_dir_real,
 

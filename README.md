@@ -58,3 +58,5 @@ Discoveries
   * [Puppet-Lint](https://github.com/rodjek/puppet-lint) helps identify deviations from the standard.
 * Use context to your advantage: Resources and variables are scoped, so use the most fine-grained scope possible.
   * Do not use "top-level" or "global" variables except for "facts."  Configuration should be handled by way of passing parameters or params.pp files.
+* Keep resource declarations and their relationships as "local" as possible, or you're just asking for cyclic dependencies that are nasty to untangle.
+* params.pp files are not just collections of constants: They can change their values based on local facts. (e.g., Selecting a different package name and version depending on the Linux distribution type and architecture.)
