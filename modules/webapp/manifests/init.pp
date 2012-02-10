@@ -1,5 +1,5 @@
-class webapp (
-  $app_name,
+define webapp (
+  $app_name = $name,
   $version,
   $server_dir,
   $owner,
@@ -15,6 +15,9 @@ class webapp (
   $service_name = 'UNSET'
 ) {
 
+  # require stdlib
+
+  # stage {'webapp::begin': } ->
   webapp::install { $app_name:
     group_name           => $group_name,
     version              => $version,
@@ -27,6 +30,7 @@ class webapp (
   }
 
   if $conf_dir != 'UNSET' {
+    Webapp::Install[$app_name] ->
     webapp::ext_conf { $app_name:
       sysproperty_name => $sysproperty_name,
       conf_dir         => $conf_dir,
@@ -36,8 +40,8 @@ class webapp (
       template_file    => $template_file,
       template_files   => $template_files,
       service_name     => $service_name,
-      require          => File[$server_dir],
-    }
+    } #->
+    # stage {'webapp::end': }
   }
 
 }

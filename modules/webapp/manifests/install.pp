@@ -22,12 +22,10 @@ define webapp::install (
   info("Getting file from ${url}")
   debug("Getting file from cred ${credential_url}")
 
-  if !defined(Package['wget']) {
-    package { 'wget':
-      ensure => installed,
-    }
+  package { 'wget':
+    ensure => installed,
   }
-
+  ->
   exec {"get_${filename}":
     path    => '/usr/bin:/bin:/opt/local/bin',
     cwd     => $server_dir,
@@ -35,19 +33,17 @@ define webapp::install (
     group   => $group,
     command => "wget --no-check-certificate ${credential_url}",
     unless  => "test -f ${filename}",
-    require => Package['wget'],
   }
-
+  ->
   exec {"mv_${filename}_to_webapps":
     path    => '/usr/bin:/bin',
     cwd     => $server_dir,
     command => "mv ${filename} webapps/",
     unless  => "test -f ${server_dir}/webapps/${filename}",
-    require => Exec["get_${filename}"],
   }
 
   if $service_name != 'UNSET' {
-    Exec["mv_${filename}_to_webapps"] -> Service[$service_name]
+    Exec["mv_${filename}_to_webapps"] ~> Service[$service_name]
   }
 
 }

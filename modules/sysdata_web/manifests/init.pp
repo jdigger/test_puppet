@@ -5,6 +5,7 @@ class sysdata_web (
   $conf_dir,
   $owner,
   $group,
+  $server_dir,
 
   # template values
   $crowd_username,
@@ -32,8 +33,7 @@ class sysdata_web (
     }
   }
 
-  class { 'webapp':
-    app_name             => 'sysdata',
+  webapp{ 'sysdata':
     group_name           => 'com.canoeventures.sysdata',
     version              => $version,
     release              => $release,
@@ -42,7 +42,7 @@ class sysdata_web (
     owner                => $owner,
     group                => $group,
     conf_dir             => $conf_dir,
-    server_dir           => $tcserver::instance_dir_real,
+    server_dir           => $server_dir,
     sysproperty_name     => 'SYSDATACONF',
     template_files       => [
       'sysdata_web/crowd-ehcache.xml.erb',
@@ -52,7 +52,16 @@ class sysdata_web (
       'sysdata_web/sysdata.properties.erb',
     ],
     service_name         => 'tcserver-sysdata',
-    # require              => Class['tcserver::service'],
+  }
+
+  ->
+
+  tcserver::service { 'tcserver-sysdata':
+    instance_name => 'sysdata',
+    service_name  => 'tcserver-sysdata',
+    owner         => 'tc-server',
+    group         => 'tc-server',
+    instance_dir  => "/opt/vfabric-tc-server-developer-2.6.2.RELEASE/sysdata",
   }
 
 }

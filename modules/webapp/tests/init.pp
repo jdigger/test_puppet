@@ -1,4 +1,4 @@
-class { 'webapp':
+webapp { 'a_app':
   group_name           => 'com.canoeventures.a_app',
   app_name             => 'a_app',
   version              => '14.5',

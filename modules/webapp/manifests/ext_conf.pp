@@ -20,15 +20,7 @@ define webapp::ext_conf (
       cwd     => "${server_dir}/bin",
       command => "sed -e \"s/^\\s*\\(JVM_OPTS=.*\\)\\\"\\s*$/\\1 -D${sysproperty_name}=${re_cd}\\\"/\" -i\".bak\" setenv.sh",
       unless  => "grep ${sysproperty_name} setenv.sh",
-    }
-  }
-
-  if !defined(File['/var/conf']) {
-    file { '/var/conf':
-      ensure  => directory,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
+      notify  => Service[$service_name],
     }
   }
 

@@ -28,7 +28,7 @@ describe 'webapp::ext_conf' do
   it do
     should contain_file(params[:conf_dir]).with(
       ensure:   :directory,
-      owner:    'test-user', 
+      owner:    'test-user',
       group:    'test-group',
       require:  "File[/var/conf]",
     )

@@ -18,15 +18,13 @@ class tcserver(
   $instance_dir = 'UNSET'
 ) {
 
-  anchor {'tcserver::begin': }
-  -> class { 'tcserver::params':}
+  require 'tcserver::params'
 
-  -> class { 'tcserver::install':
+  class { 'tcserver::install':
     owner        => $owner,
     group        => $group,
     package_name => $tcserver::params::package_name,
     version      => $tcserver::params::version,
-    # require      => Class['tcserver::params'],
   }
 
   $tomcat_version_real = $tomcat_version ? {
@@ -46,19 +44,6 @@ class tcserver(
     tomcat_version => $tomcat_version_real,
     instance_dir   => $instance_dir_real,
     require        => Class['tcserver::install'],
-  }
-
-  -> tcserver::service { $service_name:
-    instance_name => $instance_name,
-    service_name  => $service_name,
-    owner         => $owner,
-    group         => $group,
-    instance_dir  => $instance_dir_real,
-    require       => Exec["create_tcserver_${instance_name}"],
-  }
-
-  -> anchor {'tcserver::end':
-    # require => Class['tcserver::service'],
   }
 
 }

@@ -23,7 +23,7 @@ define tcserver::service (
   file { "/etc/init.d/${service_name}":
     ensure  => link,
     target  => "${instance_dir}/bin/init.d.sh",
-    # require => Class['tcserver::instance'],
+    require => Tcserver::Instance[$instance_name],
   }
 
   # Create a useful "status" command
@@ -33,7 +33,7 @@ define tcserver::service (
     mode    => '0700',
     owner   => $owner,
     group   => $group,
-    # require => Class['tcserver::instance'],
+    require => Tcserver::Instance[$instance_name],
   }
 
   service { $service_name:
@@ -42,8 +42,7 @@ define tcserver::service (
       hasstatus  => false,
       status     => "${instance_dir}/bin/status.sh",
       hasrestart => true,
-      require    => [File["/etc/init.d/${service_name}", "${instance_name}_status_script"]],
-      # require    => [File["/etc/init.d/${service_name}", "${instance_name}_status_script"], Class['tcserver::instance']],
+      require    => [File["/etc/init.d/${service_name}", "${instance_name}_status_script"], Tcserver::Instance[$instance_name]],
   }
 
 }

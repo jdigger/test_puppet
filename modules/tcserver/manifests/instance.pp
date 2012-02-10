@@ -63,17 +63,8 @@ define tcserver::instance (
     provider => shell,
     user     => $owner_real,
     group    => $group_real,
-    require  => [Class['tcserver::install'], Package['tc-server']],
+    require  => Class['tcserver::install'],
   }
-
-  # class { 'tcserver::service':
-  #   instance_name => $instance_name,
-  #   service_name  => $service_name,
-  #   owner         => $owner,
-  #   group         => $group,
-  #   instance_dir  => $instance_dir_real,
-  #   require       => Exec["create_tcserver_${instance_name}"],
-  # }
 
   # tcserver::service { $service_name:
   #   instance_name => $instance_name,
@@ -83,6 +74,4 @@ define tcserver::instance (
   #   instance_dir  => $instance_dir_real,
   #   require       => Exec["create_tcserver_${instance_name}"],
   # }
-
-  # Package['tc-server'] -> Exec["create_tcserver_${instance_name}"]
 }

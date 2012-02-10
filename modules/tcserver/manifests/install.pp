@@ -29,8 +29,6 @@ class tcserver::install(
   $version = 'UNSET'
 ) {
 
-  Class['tcserver::params'] -> Class['tcserver::install']
-
   if !defined(Class['tcserver::params']) {
     class {'tcserver::params': }
   }
@@ -45,10 +43,6 @@ class tcserver::install(
   if !defined(Class['sun_jdk']) {
     class { 'sun_jdk': }
   }
-
-  # anchor {'tcserver::install::begin':
-  #   before => Group[$group],
-  # }
 
   package { 'tc-server':
     ensure  => "${the_version}-1",
@@ -69,7 +63,6 @@ class tcserver::install(
     password_max_age => '-1',
     password_min_age => '-1',
     shell            => '',
-    require          => Group[$group],
   }
 
   exec { 'set_tcserver_dir_ownership':
@@ -87,9 +80,5 @@ class tcserver::install(
     mode    => '2600',
     require => Package['tc-server'],
   }
-
-  # anchor {'tcserver::install::end':
-  #   require => Exec['set_tcserver_dir_ownership'],
-  # }
 
 }

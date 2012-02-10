@@ -21,6 +21,13 @@ node 'base' {
 
 node 'default' inherits 'base' {
 
+  file { '/var/conf':
+    ensure  => directory,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+  }
+  ->
   class { 'tcserver':
     instance_name => 'sysdata',
     owner         => 'tc-server',
@@ -31,6 +38,7 @@ node 'default' inherits 'base' {
   class { 'sysdata_web':
     version              => '1.4.2_7',
     conf_dir             => '/var/conf/sysdata',
+    server_dir           => $tcserver::instance_dir_real,
 
     crowd_username       => 'web_portal',
     crowd_password       => 'admin',

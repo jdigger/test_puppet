@@ -26,9 +26,7 @@ class sun_jdk(
   $jdk_package_version = 'UNSET'
 ) {
 
-  if !defined(Class['sun_jdk::params']) {
-    class {'sun_jdk::params': }
-  }
+  require 'sun_jdk::params'
 
   # where to find files; first try local filesystem, then the puppet master
   $module = 'sun_jdk'
