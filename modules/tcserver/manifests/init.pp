@@ -11,8 +11,8 @@
 #
 class tcserver(
   $instance_name,
-  $owner,
-  $group,
+  $owner = 'UNSET',
+  $group = 'UNSET',
   $service_name = "tcserver-${instance_name}",
   $tomcat_version = 'UNSET',
   $instance_dir = 'UNSET'
@@ -20,9 +20,18 @@ class tcserver(
 
   require 'tcserver::params'
 
+  $owner_real = $owner ? {
+    'UNSET' => $tcserver::params::owner,
+    default => $owner,
+  }
+  $group_real = $group ? {
+    'UNSET' => $tcserver::params::group,
+    default => $group,
+  }
+
   class { 'tcserver::install':
-    owner        => $owner,
-    group        => $group,
+    owner        => $owner_real,
+    group        => $group_real,
     package_name => $tcserver::params::package_name,
     version      => $tcserver::params::version,
   }
@@ -38,8 +47,8 @@ class tcserver(
   }
 
   tcserver::instance {$instance_name:
-    owner          => $owner,
-    group          => $group,
+    owner          => $owner_real,
+    group          => $group_real,
     service_name   => $service_name,
     tomcat_version => $tomcat_version_real,
     instance_dir   => $instance_dir_real,

@@ -23,20 +23,27 @@
 # * Installs the tc Server RPM from Yum and makes sure ownership is set
 #
 class tcserver::install(
-  $owner,
-  $group,
+  $owner        = 'UNSET',
+  $group        = 'UNSET',
   $package_name = 'UNSET',
-  $version = 'UNSET'
+  $version      = 'UNSET'
 ) {
 
-  if !defined(Class['tcserver::params']) {
-    class {'tcserver::params': }
-  }
+  require 'tcserver::params'
 
   $the_package_name = $package_name ? {
     'UNSET' => $tcserver::params::package_name, default => $package_name}
   $the_version = $version ? {
     'UNSET' => $tcserver::params::version, default => $version}
+
+  $owner_real = $owner ? {
+    'UNSET' => $tcserver::params::owner,
+    default => $owner,
+  }
+  $group_real = $group ? {
+    'UNSET' => $tcserver::params::group,
+    default => $group,
+  }
 
   $tcserver_home = "/opt/${the_package_name}-${the_version}"
 
@@ -50,14 +57,14 @@ class tcserver::install(
     require => [Class['sun_jdk'], User[$owner]],
   }
 
-  group { $group:
+  group { $group_real:
     ensure => present,
   }
 
-  user { $owner:
+  user { $owner_real:
     ensure           => present,
     comment          => 'SpringSource tc-Server',
-    gid              => $group,
+    gid              => $group_real,
     home             => $tcserver_home,
     password         => '!!',
     password_max_age => '-1',
@@ -69,13 +76,13 @@ class tcserver::install(
     command => "chown -R ${owner}.${$group} ${tcserver_home}",
     path    => '/usr/bin:/bin',
     unless  => "test `stat -c %U ${tcserver_home}` = ${owner}",
-    require => [Package['tc-server'], User[$owner]],
+    require => [Package['tc-server'], User[$owner_real]],
   }
 
   file { 'set_tcserver_dir_ownership':
     path    => $tcserver_home,
-    owner   => $owner,
-    group   => $group,
+    owner   => $owner_real,
+    group   => $group_real,
     recurse => false,
     mode    => '2600',
     require => Package['tc-server'],

@@ -3,8 +3,6 @@ class sysdata_web (
   $artifactory_username,
   $artifactory_password,
   $conf_dir,
-  $owner,
-  $group,
   $server_dir,
 
   # template values
@@ -21,15 +19,29 @@ class sysdata_web (
   $grails_server_url,
   $webservice_base_url,
 
+  $owner = 'UNSET',
+  $group = 'UNSET',
   $release = true
 ) {
 
+  $owner_real = $owner ? {
+    'UNSET' => $tcserver::params::owner,
+    default => $owner,
+  }
+  $group_real = $group ? {
+    'UNSET' => $tcserver::params::group,
+    default => $group,
+  }
+
+  $instance_name = 'sysdata'
+  $service_name  = 'tcserver-sysdata'
+
   if !defined(Class['tcserver']) {
     class { 'tcserver':
-      instance_name => 'sysdata',
-      owner         => $owner,
-      group         => $group,
-      service_name  => 'tcserver-sysdata',
+      instance_name => $instance_name,
+      owner         => $owner_real,
+      group         => $group_real,
+      service_name  => $service_name,
     }
   }
 
@@ -39,8 +51,8 @@ class sysdata_web (
     release              => $release,
     artifactory_username => $artifactory_username,
     artifactory_password => $artifactory_password,
-    owner                => $owner,
-    group                => $group,
+    owner                => $owner_real,
+    group                => $group_real,
     conf_dir             => $conf_dir,
     server_dir           => $server_dir,
     sysproperty_name     => 'SYSDATACONF',
@@ -54,13 +66,13 @@ class sysdata_web (
     service_name         => 'tcserver-sysdata',
   }
 
-  ->
+  ~>
 
-  tcserver::service { 'tcserver-sysdata':
-    instance_name => 'sysdata',
-    service_name  => 'tcserver-sysdata',
-    owner         => 'tc-server',
-    group         => 'tc-server',
+  tcserver::service { $service_name:
+    instance_name => $instance_name,
+    service_name  => $service_name,
+    owner         => $owner_real,
+    group         => $group_real,
     instance_dir  => "/opt/vfabric-tc-server-developer-2.6.2.RELEASE/sysdata",
   }
 

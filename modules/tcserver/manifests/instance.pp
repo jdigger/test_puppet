@@ -6,21 +6,15 @@
 # tcserver::instance{'a_server_instance': }
 #
 define tcserver::instance (
-  $instance_name = $name,
-  $owner = 'UNSET',
-  $group = 'UNSET',
-  $service_name = "tcserver-${instance_name}",
+  $instance_name  = $name,
+  $owner          = 'UNSET',
+  $group          = 'UNSET',
+  $service_name   = "tcserver-${instance_name}",
   $tomcat_version = 'UNSET',
-  $instance_dir = 'UNSET'
+  $instance_dir   = 'UNSET'
 ) {
 
-  # Class['tcserver::params'] -> Class['tcserver::install']
-  # Class['tcserver::params'] -> Class['tcserver::instance']
-  # Class['tcserver::install'] -> Class['tcserver::instance']
-
-  if !defined(Class['tcserver::params']) {
-    class {'tcserver::params': }
-  }
+  require 'tcserver::params'
 
   if !defined(Class['sun_jdk']) {
     class {'sun_jdk': }
@@ -66,12 +60,4 @@ define tcserver::instance (
     require  => Class['tcserver::install'],
   }
 
-  # tcserver::service { $service_name:
-  #   instance_name => $instance_name,
-  #   service_name  => $service_name,
-  #   owner         => $owner,
-  #   group         => $group,
-  #   instance_dir  => $instance_dir_real,
-  #   require       => Exec["create_tcserver_${instance_name}"],
-  # }
 }

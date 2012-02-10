@@ -30,9 +30,6 @@ node 'default' inherits 'base' {
   ->
   class { 'tcserver':
     instance_name => 'sysdata',
-    owner         => 'tc-server',
-    group         => 'tc-server',
-    service_name  => 'tcserver-sysdata',
   }
   ->
   class { 'sysdata_web':
@@ -56,9 +53,6 @@ node 'default' inherits 'base' {
     datasource_url       => 'jdbc:oracle:thin:@10.13.18.67:1522:caasit02',
     datasource_username  => 'sysdata',
     datasource_password  => 'secret',
-
-    owner                => $tcserver::owner,
-    group                => $tcserver::group,
   }
 
 }
